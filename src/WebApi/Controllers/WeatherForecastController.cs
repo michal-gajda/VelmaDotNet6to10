@@ -3,6 +3,7 @@ namespace Velma.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Velma.WebApi.Results;
 using Velma.WebApi.Queries;
+using Velma.WebApi.Extensions;
 
 [ApiController]
 [Route("[controller]")]
@@ -21,12 +22,7 @@ public sealed class WeatherForecastController : ControllerBase
         {
         };
 
-        var result = (await mediator.Send(query, cancellationToken)).Select(forecast => new WeatherForecast
-        {
-            Date = forecast.Date,
-            TemperatureC = forecast.TemperatureC,
-            Summary = forecast.Summary
-        });
+        var result = (await mediator.Send(query, cancellationToken)).Select(forecast => forecast.ToResult());
 
         return result;
     }

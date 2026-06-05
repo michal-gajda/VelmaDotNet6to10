@@ -34,7 +34,7 @@ public sealed class Program
             options.MapType<DateOnly>(() => new OpenApiSchema
             {
                 Type = "string",
-                Format = "date"
+                Format = "date",
             });
         });
 

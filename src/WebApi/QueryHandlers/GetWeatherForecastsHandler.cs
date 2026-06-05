@@ -12,11 +12,6 @@ internal sealed class GetWeatherForecastsHandler : IRequestHandler<GetWeatherFor
 
     public async Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecasts request, CancellationToken cancellationToken)
     {
-        return (await service.GetWeatherForecastsAsync(cancellationToken)).Select(forecast => new WeatherForecast
-        {
-            Date = forecast.Date,
-            TemperatureC = forecast.TemperatureC,
-            Summary = forecast.Summary
-        });
+        return (await service.GetWeatherForecastsAsync(cancellationToken)).Select(forecast => (WeatherForecast)forecast);
     }
 }
