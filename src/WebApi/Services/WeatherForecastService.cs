@@ -23,11 +23,11 @@ internal sealed class WeatherForecastService : IWeatherForecastService
 
     public WeatherForecastService(TimeProvider timeProvider) => this.timeProvider = timeProvider;
 
-    public Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync(CancellationToken cancellationToken = default)
+    public Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync(int range, CancellationToken cancellationToken = default)
     {
         var dateTime = timeProvider.GetUtcNow().Date;
 
-        var result = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        var result = Enumerable.Range(1, range).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(dateTime.AddDays(index)),
             Summary = Summaries[Random.Shared.Next(Summaries.Length)],

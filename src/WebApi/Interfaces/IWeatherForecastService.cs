@@ -4,5 +4,5 @@ using Velma.WebApi.Models;
 
 internal interface IWeatherForecastService
 {
-    Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync(int range, CancellationToken cancellationToken = default);
 }

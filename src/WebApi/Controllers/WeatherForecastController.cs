@@ -20,9 +20,11 @@ public sealed class WeatherForecastController : ControllerBase
     {
         var query = new GetWeatherForecasts
         {
+            Range = 7,
         };
 
-        var result = (await mediator.Send(query, cancellationToken)).Select(forecast => forecast.ToResult());
+        var result = (await mediator.Send(query, cancellationToken))
+            .Select(forecast => forecast.ToResult());
 
         return result;
     }

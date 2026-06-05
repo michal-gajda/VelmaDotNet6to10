@@ -12,6 +12,7 @@ internal sealed class GetWeatherForecastsHandler : IRequestHandler<GetWeatherFor
 
     public async Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecasts request, CancellationToken cancellationToken)
     {
-        return (await service.GetWeatherForecastsAsync(cancellationToken)).Select(forecast => (WeatherForecast)forecast);
+        return (await service.GetWeatherForecastsAsync(request.Range, cancellationToken))
+            .Select(forecast => (WeatherForecast)forecast);
     }
 }
