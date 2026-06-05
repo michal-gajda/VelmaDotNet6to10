@@ -1,6 +1,9 @@
-using Microsoft.OpenApi.Models;
-
 namespace Velma.WebApi;
+
+using Microsoft.OpenApi.Models;
+using Velma.WebApi.Interfaces;
+using Velma.WebApi.Services;
+using System.Reflection;
 
 public sealed class Program
 {
@@ -11,6 +14,13 @@ public sealed class Program
     public static async Task<int> Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
+
+        builder.Services.AddSingleton<IWeatherForecastService, WeatherForecastService>();
 
         builder.Services.AddControllers().AddJsonOptions(options =>
         {

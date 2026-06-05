@@ -1,42 +1,33 @@
 namespace Velma.WebApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using Velma.WebApi.Results;
+using Velma.WebApi.Queries;
 
 [ApiController]
 [Route("[controller]")]
 public sealed class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Balmy",
-        "Bracing",
-        "Chilly",
-        "Cool",
-        "Freezing",
-        "Hot",
-        "Mild",
-        "Scorching",
-        "Sweltering",
-        "Warm",
-    };
-
     private readonly ILogger<WeatherForecastController> logger;
-    private readonly TimeProvider timeProvider;
+    private readonly IMediator mediator;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, TimeProvider timeProvider) =>
-        (this.logger, this.timeProvider) = (logger, timeProvider);
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator) =>
+        (this.logger, this.mediator) = (logger, mediator);
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    public async Task<IEnumerable<WeatherForecast>> GetWeathersAsync(CancellationToken cancellationToken = default)
     {
-        var dateTime = timeProvider.GetUtcNow().Date;
-
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        var query = new GetWeatherForecasts
         {
-            Date = DateOnly.FromDateTime(dateTime.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        };
+
+        var result = (await mediator.Send(query, cancellationToken)).Select(forecast => new WeatherForecast
+        {
+            Date = forecast.Date,
+            TemperatureC = forecast.TemperatureC,
+            Summary = forecast.Summary
+        });
+
+        return result;
     }
 }
